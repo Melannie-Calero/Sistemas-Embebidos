@@ -1,0 +1,34 @@
+/* UNIVERSIDAD TÉCNICA DEL NORTE
+ * FACULTAD DE INGENIERÍA EN CIENCIAS APLICADAS   
+ * CARRERA DE INGENIERÍA EN TELECOMUNICACIONES
+ * DEBER N° 03
+ * CAPÍTULO III: MÓDULOS DE COMUNICACIÓN I2C
+ * CÓDIGO 3: Comunicación I2C
+ * OBJETIVO:   Mediante comunicación I2C configurar 1 maestro y 3 esclavos. Cada esclavo tendrá conectados 4 leds en sus salidas digitales, los cuales 
+ * deberán encenderse de forma síncrona y ordenada. Los leds del primer esclavo deberán entran en funcionamiento cuando se ingrese 'Cualquier caracter', luego 
+ * cuando se ingrese otro 'Cualquier caracter 2' entrará en funcionamiento el esclavo 2, y después cuando se ingrese otro 'Cualquier caracter 3' entrará en 
+ * funcionamiento el esclavo 3.
+ * NOMBRE: MELANNIE CALERO
+ * FECHA: 22/11/2021
+ * FUNCIONES: 
+ *           Wire.begin()
+ *           Wire.beginTransmission(address) -> ID de esclavo
+ *           
+ */
+ ///////////////////////////MASTER//////////////////////
+#include<Wire.h>          // librería i2c
+byte c;                   // variable de almancenamiento de datos
+
+void setup() {
+  Wire.begin();           //inicia comunicacion i2c
+  Serial.begin(9600);     //inicia comunicacion serial
+}
+ 
+void loop() {
+    if(Serial.available()>0){             //verifica el puerto de comunicacion
+        c=Serial.read();                  // almacena el dato en variable
+        Wire.beginTransmission(4);        // empieza comunicacion i2c
+        Wire.write(c);                    // envía dato
+        Wire.endTransmission();           // termina comunicacion i2c
+      }
+}
