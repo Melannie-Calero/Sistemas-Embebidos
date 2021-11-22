@@ -1,0 +1,245 @@
+/* UNIVERSIDAD TÉCNICA DEL NORTE 
+ * FACULTAD DE INGENIERÍA EN CIENCIAS APLICADAS   
+ * CARRERA DE INGENIERÍA EN TELECOMUNICACIONES
+ * DEBER ° 03
+ * CAPÍTULO III: MÓDULOS DE COMUNICACIÓN I2C
+ * CÓDIGO 3: Comunicación I2C
+ * OBJETIVO:   Mediante comunicación I2C configurar 1 maestro y 3 esclavos. Cada esclavo tendrá conectados 4 leds en sus salidas digitales, los cuales 
+ * deberán encenderse de forma síncrona y ordenada. Los leds del primer esclavo deberán entran en funcionamiento cuando se ingrese 'Cualquier caracter', luego 
+ * cuando se ingrese otro 'Cualquier caracter 2' entrará en funcionamiento el esclavo 2, y después cuando se ingrese otro 'Cualquier caracter 3' entrará en 
+ * funcionamiento el esclavo 3.
+ * NOMBRE: MELANNIE CALERO
+ * FECHA: 22/11/2021
+ * FUNCIONES: 
+ *           Wire.begin()
+ *           Wire.beginTransmission(address) -> ID de esclavo
+ *           
+ */
+ ///////////////////////////MASTER//////////////////////
+#include<Wire.h>          // librería i2c
+byte c;                   // variable de almancenamiento de datos
+
+void setup() {
+  Wire.begin();           //inicia comunicacion i2c
+  Serial.begin(9600);     //inicia comunicacion serial
+}
+ 
+void loop() {
+    if(Serial.available()>0){             //verifica el puerto de comunicacion
+        c=Serial.read();                  // almacena el dato en variable
+        Wire.beginTransmission(4);        // empieza comunicacion i2c
+        Wire.write(c);                    // envía dato
+        Wire.endTransmission();           // termina comunicacion i2c
+      }
+}
+
+
+
+
+////////////////////////////////ESCLAVO 1/////////////////////////////
+
+ 
+#include <Wire.h> //librería i2c
+char dato; // variable de almacenamiento de dato de cx i2c
+const int led1=8; // led1 en pin8
+const int led2=9; // led2 en pin9
+const int led3=10; // led3 en pin10
+const int led4=11; // led4 en pin11
+int dir=0;         //contador de posiciones del vector
+byte veces[3];     //definición de vector de 3 posiciones para los 3 esclavos
+
+void setup() {
+  Wire.begin(4); // id de esclavo
+  Wire.onReceive(receiveEvent); // evento de recepción
+  Serial.begin(9600); // inicio de cx serial
+  pinMode(led1,OUTPUT); // pin8 como salida
+  pinMode(led2,OUTPUT); // pin9 como salida
+  pinMode(led3,OUTPUT); // pin10 como salida
+  pinMode(led4,OUTPUT); // pin11 como salida
+}
+
+
+void loop() {
+}
+
+
+void receiveEvent (int bytes){
+  while(Wire.available()){    //El número de bytes disponibles para leer 
+    byte c=Wire.read();       //ingreso del dato definido como byte
+    if(c){                    
+      veces[dir]=c;           //vector de bytes
+      dir++;                  //contador
+      if(dir==1){             //indica el esclavo 1
+       if(veces[0]==c){       // en la posición cero del vector
+         digitalWrite(led1 ,HIGH);       // Envía  5V al pin 8
+         delay (20000);                  // Detiene al  microcontrolador  por 20000
+         digitalWrite(led1 ,LOW);        // Envía  0V al pin 8
+         delay (20000);                  // Detiene al  microcontrolador  por 20000
+         digitalWrite(led2 ,HIGH);       // Envía  5V al pin 9
+         delay (20000);                  // Detiene al  microcontrolador  por 20000
+         digitalWrite(led2 ,LOW);        // Envía  0V al pin 9
+         delay (20000);                  // Detiene al  microcontrolador  por 20000
+         digitalWrite(led3 ,HIGH);       // Envía  5V al pin 10
+         delay (20000);                  // Detiene al  microcontrolador  por 20000
+         digitalWrite(led3 ,LOW);        // Envía  0V al pin 10
+         delay (20000);                  // Detiene al  microcontrolador  por 20000
+         digitalWrite(led4 ,HIGH);       // Envía  5V al pin 11
+         delay (20000);                  // Detieneal  microcontrolador  por 20000
+         digitalWrite(led4 ,LOW);        // Envía  0V al pin 11
+         delay (20000);                  // Detiene al  microcontrolador  por 20000
+        }else{
+         digitalWrite(led1 ,LOW);        // Envía  0V al pin 8
+         delay (20000);                  // Detiene al  microcontrolador  por 20000
+         digitalWrite(led2 ,LOW);        // Envía  0V al pin 9
+         delay (20000);                  // Detiene al  microcontrolador  por 20000
+         digitalWrite(led3 ,LOW);        // Envía  0V al pin 10
+         delay (20000);                  // Detiene al  microcontrolador  por 20000
+         digitalWrite(led4 ,LOW);        // Envía  0V al pin 11
+        }
+      }
+      }
+  }
+}
+
+
+
+
+
+
+
+////////////////////////////////ESCLAVO 2/////////////////////////////
+
+ 
+#include <Wire.h> //librería i2c
+char dato; // variable de almacenamiento de dato de cx i2c
+const int led1=8; // led1 en pin8
+const int led2=9; // led2 en pin9
+const int led3=10; // led3 en pin10
+const int led4=11; // led4 en pin11
+int dir=0;         //contador de posiciones del vector
+byte veces[3];     //definición de vector de 3 posiciones para los 3 esclavos
+
+void setup() {
+  Wire.begin(4); // id de esclavo
+  Wire.onReceive(receiveEvent); // evento de recepción
+  Serial.begin(9600); // inicio de cx serial
+  pinMode(led1,OUTPUT); // pin8 como salida
+  pinMode(led2,OUTPUT); // pin9 como salida
+  pinMode(led3,OUTPUT); // pin10 como salida
+  pinMode(led4,OUTPUT); // pin11 como salida
+}
+
+
+void loop() {
+}
+
+
+void receiveEvent (int bytes){
+  while(Wire.available()){    //El número de bytes disponibles para leer 
+    byte c=Wire.read();       //ingreso del dato definido como byte
+    if(c){                    
+      veces[dir]=c;           //vector de bytes
+      dir++;                  //contador
+      if(dir==2){             //indica el esclavo 1
+       if(veces[1]==c){       // en la posición cero del vector
+         digitalWrite(led1 ,HIGH);       // Envía  5V al pin 8
+         delay (20000);                  // Detiene al  microcontrolador  por 20000
+         digitalWrite(led1 ,LOW);        // Envía  0V al pin 8
+         delay (20000);                  // Detiene al  microcontrolador  por 20000
+         digitalWrite(led2 ,HIGH);       // Envía  5V al pin 9
+         delay (20000);                  // Detiene al  microcontrolador  por 20000
+         digitalWrite(led2 ,LOW);        // Envía  0V al pin 9
+         delay (20000);                  // Detiene al  microcontrolador  por 20000
+         digitalWrite(led3 ,HIGH);       // Envía  5V al pin 10
+         delay (20000);                  // Detiene al  microcontrolador  por 20000
+         digitalWrite(led3 ,LOW);        // Envía  0V al pin 10
+         delay (20000);                  // Detiene al  microcontrolador  por 20000
+         digitalWrite(led4 ,HIGH);       // Envía  5V al pin 11
+         delay (20000);                  // Detieneal  microcontrolador  por 20000
+         digitalWrite(led4 ,LOW);        // Envía  0V al pin 11
+         delay (20000);                  // Detiene al  microcontrolador  por 20000
+        }else{
+         digitalWrite(led1 ,LOW);        // Envía  0V al pin 8
+         delay (20000);                  // Detiene al  microcontrolador  por 20000
+         digitalWrite(led2 ,LOW);        // Envía  0V al pin 9
+         delay (20000);                  // Detiene al  microcontrolador  por 20000
+         digitalWrite(led3 ,LOW);        // Envía  0V al pin 10
+         delay (20000);                  // Detiene al  microcontrolador  por 20000
+         digitalWrite(led4 ,LOW);        // Envía  0V al pin 11
+        }
+      }
+      }
+  }
+}
+
+
+
+
+
+
+
+
+////////////////////////////////ESCLAVO 3/////////////////////////////
+
+ 
+#include <Wire.h> //librería i2c
+char dato; // variable de almacenamiento de dato de cx i2c
+const int led1=8; // led1 en pin8
+const int led2=9; // led2 en pin9
+const int led3=10; // led3 en pin10
+const int led4=11; // led4 en pin11
+int dir=0;         //contador de posiciones del vector
+byte veces[3];     //definición de vector de 3 posiciones para los 3 esclavos
+
+void setup() {
+  Wire.begin(4); // id de esclavo
+  Wire.onReceive(receiveEvent); // evento de recepción
+  Serial.begin(9600); // inicio de cx serial
+  pinMode(led1,OUTPUT); // pin8 como salida
+  pinMode(led2,OUTPUT); // pin9 como salida
+  pinMode(led3,OUTPUT); // pin10 como salida
+  pinMode(led4,OUTPUT); // pin11 como salida
+}
+
+
+void loop() {
+}
+
+
+void receiveEvent (int bytes){
+  while(Wire.available()){    //El número de bytes disponibles para leer 
+    byte c=Wire.read();       //ingreso del dato definido como byte
+    if(c){                    
+      veces[dir]=c;           //vector de bytes
+      dir++;                  //contador
+      if(dir==3){             //indica el esclavo 1
+       if(veces[2]==c){       // en la posición cero del vector
+         digitalWrite(led1 ,HIGH);       // Envía  5V al pin 8
+         delay (20000);                  // Detiene al  microcontrolador  por 20000
+         digitalWrite(led1 ,LOW);        // Envía  0V al pin 8
+         delay (20000);                  // Detiene al  microcontrolador  por 20000
+         digitalWrite(led2 ,HIGH);       // Envía  5V al pin 9
+         delay (20000);                  // Detiene al  microcontrolador  por 20000
+         digitalWrite(led2 ,LOW);        // Envía  0V al pin 9
+         delay (20000);                  // Detiene al  microcontrolador  por 20000
+         digitalWrite(led3 ,HIGH);       // Envía  5V al pin 10
+         delay (20000);                  // Detiene al  microcontrolador  por 20000
+         digitalWrite(led3 ,LOW);        // Envía  0V al pin 10
+         delay (20000);                  // Detiene al  microcontrolador  por 20000
+         digitalWrite(led4 ,HIGH);       // Envía  5V al pin 11
+         delay (20000);                  // Detieneal  microcontrolador  por 20000
+         digitalWrite(led4 ,LOW);        // Envía  0V al pin 11
+         delay (20000);                  // Detiene al  microcontrolador  por 20000
+        }else{
+         digitalWrite(led1 ,LOW);        // Envía  0V al pin 8
+         delay (20000);                  // Detiene al  microcontrolador  por 20000
+         digitalWrite(led2 ,LOW);        // Envía  0V al pin 9
+         delay (20000);                  // Detiene al  microcontrolador  por 20000
+         digitalWrite(led3 ,LOW);        // Envía  0V al pin 10
+         delay (20000);                  // Detiene al  microcontrolador  por 20000
+         digitalWrite(led4 ,LOW);        // Envía  0V al pin 11
+        }
+      }
+      }
+  }
+}
